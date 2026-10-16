@@ -1,14 +1,30 @@
 services:
   stats-server:
+    build: ./stat/service
     ports:
       - "9090:9090"
+    depends_on:
+      stats-db:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://stats-db:5432/statdb
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+
 
   stats-db:
     image: postgres:16.1
+    environment:
+      POSTGRES_DB: statdb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - stat-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres -d statdb" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
-  ewm-service:
-    ports:
-      - "8080:8080"
-
-  ewm-db:
-    image: postgres:16.1
+volumes:
+  stat-db-data:

@@ -1,0 +1,7 @@
+FROM eclipse-temurin:21-jre-jammy
+WORKDIR /app
+VOLUME /tmp
+ARG JAR_FILE=target/*.jar
+COPY ${JAR_FILE} app.jar
+EXPOSE 9090
+ENTRYPOINT ["sh", "-c", "exec java ${JAVA_OPTS} -jar app.jar"]
