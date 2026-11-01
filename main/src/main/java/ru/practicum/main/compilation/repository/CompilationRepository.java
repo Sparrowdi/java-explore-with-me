@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface CompilationRepository extends JpaRepository<Compilation, Long> {
     @Query("""
-            SELECT c FROM Compilation c 
+            SELECT c FROM Compilation c
             WHERE :pinned IS NULL OR c.pinned = :pinned
             """)
     List<Compilation> findCompilations(@Param("pinned") Boolean pinned, Pageable pageable);

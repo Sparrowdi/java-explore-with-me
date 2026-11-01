@@ -12,7 +12,7 @@ public final class UserMapper {
         return new UserDto(user.getId(), user.getEmail(), user.getName());
     }
 
-    public static User mapToUser(NewUserRequest newUserRequest){
+    public static User mapToUser(NewUserRequest newUserRequest) {
         User user = new User();
         user.setEmail(newUserRequest.getEmail());
         user.setName(newUserRequest.getName());

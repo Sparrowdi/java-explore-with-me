@@ -14,11 +14,11 @@ import java.util.Optional;
 
 public interface EventRepository extends JpaRepository<Event, Long> {
     @Query(value = """
-            SELECT e 
-            FROM Event e 
-            JOIN FETCH e.category 
-            JOIN FETCH e.initiator 
-            WHERE e.initiator.id = :userId  
+            SELECT e
+            FROM Event e
+            JOIN FETCH e.category
+            JOIN FETCH e.initiator
+            WHERE e.initiator.id = :userId
             """)
     List<Event> findEventsByInitiator(@Param("userId") long userId, Pageable pageable);
 
@@ -33,15 +33,15 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     Optional<Event> findByIdAndInitiatorId(long eventId, long userId);
 
     @Query("""
-            SELECT e  
-            FROM Event e 
-            JOIN FETCH e.category 
-            JOIN FETCH e.initiator 
+            SELECT e
+            FROM Event e
+            JOIN FETCH e.category
+            JOIN FETCH e.initiator
             WHERE (:users IS NULL OR e.initiator.id IN :users)
                 AND (:states IS NULL OR e.state IN :states)
                 AND (:categories IS NULL OR e.category.id IN :categories)
                 AND (:rangeStart IS NULL OR e.eventDate >= :rangeStart)
-                AND (:rangeEnd IS NULL OR e.eventDate <= :rangeEnd)                
+                AND (:rangeEnd IS NULL OR e.eventDate <= :rangeEnd)
             """)
     List<Event> findByInitiatorInAndStateInAndCategoryInAndEventDateBetween(
             @Param("users") List<Long> users,
@@ -70,7 +70,7 @@ public interface EventRepository extends JpaRepository<Event, Long> {
                 AND (:paid IS NULL OR e.paid = :paid)
                 AND (:rangeStart IS NULL OR e.eventDate >= :rangeStart)
                 AND (:rangeEnd IS NULL OR e.eventDate <= :rangeEnd)
-                AND (:onlyAvailable = false OR e.participantLimit = 0 
+                AND (:onlyAvailable = false OR e.participantLimit = 0
                     OR (SELECT COUNT(r) FROM Request r WHERE r.event.id = e.id AND r.status = :status) < e.participantLimit)""")
     List<Event> findPublishedEvents(
             @Param("text") String text,

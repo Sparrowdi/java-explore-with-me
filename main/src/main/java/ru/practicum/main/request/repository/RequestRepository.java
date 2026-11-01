@@ -19,7 +19,7 @@ public interface RequestRepository extends JpaRepository<Request, Long> {
     List<Request> findByEventIdAndStatusOrderById(long eventId, RequestStatus status);
 
     @Query("""
-            SELECT r 
+            SELECT r
             FROM Request r
             WHERE r.requester.id = :userId
                 AND r.event.initiator.id <> :userId

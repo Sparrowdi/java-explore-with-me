@@ -3,7 +3,6 @@ package ru.practicum.main.compilation.dto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
-import ru.practicum.main.event.dto.EventShortDto;
 
 import java.util.List;
 
