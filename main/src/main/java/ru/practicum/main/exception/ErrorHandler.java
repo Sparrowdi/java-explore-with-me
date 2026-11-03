@@ -4,9 +4,6 @@ import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -54,39 +51,6 @@ public class ErrorHandler {
                 .message(ex.getMessage())
                 .timestamp(LocalDateTime.now())
                 .build();
-    }
-
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ApiError> handleMethodArgumentNotValid(MethodArgumentNotValidException ex) {
-        log.warn("Ошибка валидации параметров");
-
-        FieldError fieldError = ex.getBindingResult().getFieldError();
-        String message = fieldError != null
-                ? String.format("Field: %s. Error: %s. Value: %s",
-                fieldError.getField(), fieldError.getDefaultMessage(), fieldError.getRejectedValue())
-                : "Validation failed";
-
-        if (fieldError != null
-                && "eventDate".equals(fieldError.getField())
-                && "EventDateValid".equals(fieldError.getCode())
-        ) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(ApiError
-                    .builder()
-                    .status(HttpStatus.CONFLICT)
-                    .reason("For the requested operation the conditions are not met.")
-                    .message(message)
-                    .timestamp(LocalDateTime.now())
-                    .build()
-            );
-        }
-
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiError.builder()
-                .status(HttpStatus.BAD_REQUEST)
-                .reason("Incorrectly made request.")
-                .message(message)
-                .timestamp(LocalDateTime.now())
-                .build()
-        );
     }
 
     @ExceptionHandler({

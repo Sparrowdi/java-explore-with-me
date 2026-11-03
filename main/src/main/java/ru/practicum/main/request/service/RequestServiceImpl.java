@@ -6,7 +6,6 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.main.event.model.Event;
 import ru.practicum.main.event.model.EventState;
 import ru.practicum.main.event.repository.EventRepository;
-import ru.practicum.main.exception.BadRequestException;
 import ru.practicum.main.exception.ConflictException;
 import ru.practicum.main.exception.NotFoundException;
 import ru.practicum.main.request.dto.EventRequestStatusUpdateRequest;
@@ -49,51 +48,53 @@ public class RequestServiceImpl implements RequestService {
                 .orElseThrow(() -> new NotFoundException(String.format("Event with id=%d was not found", eventId)));
         List<Request> requests = requestRepository.findByEventIdAndIdIn(eventId, statusRequest.getRequestIds());
 
-        // Все заявки должны быть PENDING
+        // статус можно изменить только у заявок, находящихся в состоянии ожидания (Ожидается код ошибки 409)
         for (Request request : requests) {
             if (request.getStatus() != RequestStatus.PENDING) {
-                throw new BadRequestException("Request must have status PENDING");   // 400
+                throw new ConflictException("Status can only be changed for requests that are in a pending state");
             }
         }
 
         List<ParticipationRequestDto> confirmed = new ArrayList<>();
         List<ParticipationRequestDto> rejected = new ArrayList<>();
         List<Request> toSave = new ArrayList<>(requests);
-//        если для события лимит заявок равен 0 или отключена пре-модерация заявок, то подтверждение заявок не требуется
-//        нельзя подтвердить заявку, если уже достигнут лимит по заявкам на данное событие (Ожидается код ошибки 409)
-//        статус можно изменить только у заявок, находящихся в состоянии ожидания (Ожидается код ошибки 409)
-//        если при подтверждении данной заявки, лимит заявок для события исчерпан, то все неподтверждённые заявки необходимо отклонить
         if (statusRequest.getStatus() == RequestStatus.REJECTED) {
-            // Отклоняем все выбранные
             for (Request request : requests) {
                 request.setStatus(RequestStatus.REJECTED);
                 rejected.add(RequestMapper.mapToRequestDto(request));
+                toSave.add(request);
             }
         } else { // CONFIRMED
             long confirmedCount = requestRepository.countByEventIdAndStatus(eventId, RequestStatus.CONFIRMED);
             int limit = event.getParticipantLimit();
 
+            // если для события лимит заявок равен 0 или отключена пре-модерация заявок,
+            // то подтверждение заявок не требуется
+            if (limit == 0 || !event.isRequestModeration()) {
+                return new EventRequestStatusUpdateResult(confirmed, rejected);
+            }
+
+            // нельзя подтвердить заявку, если уже достигнут лимит по заявкам на данное событие
+            // ожидается код ошибки 409
+            if (limit > 0 && confirmedCount >= limit) {
+                throw new ConflictException("Participation requests limit requests reached.");
+            }
+
             for (Request request : requests) {
-                if (limit == 0 || confirmedCount < limit) {
+                // если при подтверждении данной заявки, лимит заявок для события исчерпан,
+                // то все неподтверждённые заявки необходимо отклонить
+                if (limit > 0 && confirmedCount >= limit) {
+                    request.setStatus(RequestStatus.REJECTED);
+                    rejected.add(RequestMapper.mapToRequestDto(request));
+                    toSave.add(request);
+                } else {
                     request.setStatus(RequestStatus.CONFIRMED);
                     confirmedCount++;
                     confirmed.add(RequestMapper.mapToRequestDto(request));
-                } else {
-                    request.setStatus(RequestStatus.REJECTED);
-                    rejected.add(RequestMapper.mapToRequestDto(request));
-                }
-            }
-            // Если лимит исчерпан — отклонить все оставшиеся PENDING
-            if (limit > 0 && confirmedCount >= limit) {
-                List<Request> remaining = requestRepository.findByEventIdAndStatusOrderById(eventId, RequestStatus.PENDING);
-                for (Request request : remaining) {
-                    request.setStatus(RequestStatus.REJECTED);
-                    rejected.add(RequestMapper.mapToRequestDto(request));
                     toSave.add(request);
                 }
             }
         }
-
         requestRepository.saveAll(toSave);
         return new EventRequestStatusUpdateResult(confirmed, rejected);
     }

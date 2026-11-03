@@ -48,6 +48,6 @@ public class Event {
     private boolean requestModeration = true;
     @Column(nullable = false)
     private Long views = 0L;
-    @Formula("(SELECT COUNT(r) FROM requests r WHERE r.event_id = id AND r.status = 'CONFIRMED')")
+    @Formula("(SELECT COUNT(*) FROM requests r WHERE r.event_id = id AND r.status = 'CONFIRMED')")
     private Long confirmedRequests;
 }
