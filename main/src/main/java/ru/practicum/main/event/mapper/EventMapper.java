@@ -17,11 +17,11 @@ import java.time.LocalDateTime;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class EventMapper {
-    public static EventFullDto mapToEventFullDto(Event event) {
+    public static EventFullDto mapToEventFullDto(Event event, long confirmedRequests) {
         return EventFullDto.builder()
                 .annotation(event.getAnnotation())
                 .category(CategoryMapper.mapToCategoryDto(event.getCategory()))
-                .confirmedRequests(0L)
+                .confirmedRequests(confirmedRequests)
                 .createdOn(event.getCreatedOn())
                 .description(event.getDescription())
                 .eventDate(event.getEventDate())
@@ -38,11 +38,11 @@ public final class EventMapper {
                 .build();
     }
 
-    public static EventShortDto mapToEventShortDto(Event event) {
+    public static EventShortDto mapToEventShortDto(Event event, long confirmedRequests) {
         return EventShortDto.builder()
                 .annotation(event.getAnnotation())
                 .category(CategoryMapper.mapToCategoryDto(event.getCategory()))
-                .confirmedRequests(0L)
+                .confirmedRequests(confirmedRequests)
                 .eventDate(event.getEventDate())
                 .id(event.getId())
                 .initiator(new UserShortDto(event.getInitiator().getId(), event.getInitiator().getName()))

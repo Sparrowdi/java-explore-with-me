@@ -25,4 +25,15 @@ public interface RequestRepository extends JpaRepository<Request, Long> {
     List<Request> findByRequesterIdAndEventInitiatorIdNot(@Param("userId") long userId);
 
     Optional<Request> findByIdAndRequesterId(long id, long userId);
+
+    boolean existsByRequesterIdAndEventId(long requesterId, long eventId);
+
+    @Query("""
+            SELECT r.event.id, COUNT(r)
+            FROM Request r
+            WHERE r.event.id IN :eventIds AND r.status = :status
+            GROUP BY r.event.id
+            """)
+    List<Object[]> countConfirmedByEventIds(@Param("eventIds") List<Long> eventIds,
+                                            @Param("status") RequestStatus status);
 }

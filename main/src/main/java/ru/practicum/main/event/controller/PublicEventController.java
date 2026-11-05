@@ -88,7 +88,7 @@ public class PublicEventController {
      */
     @GetMapping("/{id}")
     public EventFullDto getEvent(@PathVariable @PositiveOrZero long id, HttpServletRequest request) {
-        log.info("GET /events/{} - запрос на получение информации об опубликованном событии с id={}", id);
+        log.info("GET /events/{} - запрос на получение информации об опубликованном событии с id={} ip={} path={}", id, id, request.getRemoteAddr(), request.getRequestURI());
         return publicEventService.get(id, request.getRemoteAddr(), request.getRequestURI());
     }
 }

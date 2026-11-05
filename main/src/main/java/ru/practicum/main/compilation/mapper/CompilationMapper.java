@@ -11,6 +11,7 @@ import ru.practicum.main.event.model.Event;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -23,12 +24,19 @@ public final class CompilationMapper {
         return compilation;
     }
 
-    public static CompilationDto mapToCompilationDto(Compilation compilation, List<Event> events) {
+    public static CompilationDto mapToCompilationDto(Compilation compilation,
+                                                     List<Event> events,
+                                                     Map<Long, Long> confirmedByEventId
+    ) {
         return CompilationDto.builder()
                 .id(compilation.getId())
                 .pinned(compilation.isPinned())
                 .title(compilation.getTitle())
-                .events(events.stream().map(EventMapper::mapToEventShortDto).toList())
+                .events(events.stream()
+                        .map(event -> EventMapper.mapToEventShortDto(
+                                event,
+                                confirmedByEventId.getOrDefault(event.getId(), 0L)))
+                        .toList())
                 .build();
     }
 

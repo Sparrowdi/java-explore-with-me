@@ -3,7 +3,6 @@ package ru.practicum.main.event.model;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.Formula;
 import ru.practicum.main.category.model.Category;
 import ru.practicum.main.user.model.User;
 
@@ -48,6 +47,4 @@ public class Event {
     private boolean requestModeration = true;
     @Column(nullable = false)
     private Long views = 0L;
-    @Formula("(SELECT COUNT(*) FROM requests r WHERE r.event_id = id AND r.status = 'CONFIRMED')")
-    private Long confirmedRequests;
 }

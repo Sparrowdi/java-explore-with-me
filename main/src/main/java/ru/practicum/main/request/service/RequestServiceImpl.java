@@ -70,7 +70,7 @@ public class RequestServiceImpl implements RequestService {
 
             // если для события лимит заявок равен 0 или отключена пре-модерация заявок,
             // то подтверждение заявок не требуется
-            if (limit == 0 || !event.isRequestModeration()) {
+            if (!event.isRequestModeration() || limit == 0) {
                 return new EventRequestStatusUpdateResult(confirmed, rejected);
             }
 
@@ -126,14 +126,19 @@ public class RequestServiceImpl implements RequestService {
         if (event.getState() != EventState.PUBLISHED) {
             throw new ConflictException("Event must be published.");
         }
-        long confirmed = event.getConfirmedRequests() != null ? event.getConfirmedRequests() : 0L;
+        if (requestRepository.existsByRequesterIdAndEventId(userId, eventId)) {
+            throw new ConflictException("Request already exists.");
+        }
+
+        long confirmed = requestRepository.countByEventIdAndStatus(eventId, RequestStatus.CONFIRMED);
         if (event.getParticipantLimit() > 0 && confirmed >= event.getParticipantLimit()) {
             throw new ConflictException("Participation requests limit requests reached.");
         }
         Request request = new Request();
         request.setEvent(event);
         request.setRequester(requester);
-        request.setStatus(event.isRequestModeration() ? RequestStatus.PENDING : RequestStatus.CONFIRMED);
+        request.setStatus(!event.isRequestModeration() || event.getParticipantLimit() == 0
+                ? RequestStatus.CONFIRMED : RequestStatus.PENDING);
         request.setCreated(LocalDateTime.now());
         request = requestRepository.save(request);
         return RequestMapper.mapToRequestDto(request);
