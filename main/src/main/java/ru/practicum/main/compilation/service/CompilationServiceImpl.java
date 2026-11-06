@@ -79,7 +79,6 @@ public class CompilationServiceImpl implements CompilationService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public List<CompilationDto> get(Boolean pinned, int from, int size) {
         Pageable pageable = FromSizeRequest.of(from, size);
         List<Compilation> compilations = compilationRepository.findCompilations(pinned, pageable);

@@ -1,7 +1,6 @@
 package ru.practicum.main.event.service;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -29,7 +28,6 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class PublicEventServiceImpl implements PublicEventService {
     private final EventRepository eventRepository;
     private final StatClient statClient;
@@ -50,7 +48,6 @@ public class PublicEventServiceImpl implements PublicEventService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public List<EventShortDto> get(String text,
                                    List<Long> categories,
                                    Boolean paid,
