@@ -65,7 +65,7 @@ public class PrivateEventController {
      * @param userId  id текущего пользователя.
      * @param eventId id события.
      * @return полная информация о событии;
-     * статус код 404, если события не найдено.
+     * статус код 404, если событие не найдено.
      */
     @GetMapping("/{eventId}")
     public EventFullDto getEvent(@PathVariable @PositiveOrZero long userId,
