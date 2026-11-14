@@ -394,7 +394,7 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{baseUrl}}/users/:userId/events/:eventId/comments?from=1&size=10",
+                  "raw": "{{baseUrl}}/users/:userId/events/:eventId/comments?from=0",
                   "host": [
                     "{{baseUrl}}"
                   ],
@@ -408,13 +408,14 @@
                   "query": [
                     {
                       "key": "from",
-                      "value": "1",
+                      "value": "0",
                       "description": "количество комментариев, которые нужно пропустить для формирования текущего набора"
                     },
                     {
                       "key": "size",
                       "value": "10",
-                      "description": "количество комментариев в наборе"
+                      "description": "количество комментариев в наборе",
+                      "disabled": true
                     }
                   ],
                   "variable": [
@@ -464,7 +465,7 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{baseUrl}}/users/:userId/events/:eventId/comments?from=0&size=11",
+                  "raw": "{{baseUrl}}/users/:userId/events/:eventId/comments?size=11",
                   "host": [
                     "{{baseUrl}}"
                   ],
@@ -479,7 +480,8 @@
                     {
                       "key": "from",
                       "value": "0",
-                      "description": "количество комментариев, которые нужно пропустить для формирования текущего набора"
+                      "description": "количество комментариев, которые нужно пропустить для формирования текущего набора",
+                      "disabled": true
                     },
                     {
                       "key": "size",
