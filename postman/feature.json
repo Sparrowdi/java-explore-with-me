@@ -380,7 +380,7 @@
                   "script": {
                     "type": "text/javascript",
                     "exec": [
-                      "const main = async () => {\r\n    const api = new API(pm);\r\n    const rnd = new RandomUtils();\r\n\r\n    try {\r\n        const initiator = await api.addUser(rnd.getUser());\r\n        const category = await api.addCategory(rnd.getCategory());\r\n        let event = await api.addEvent(initiator.id, rnd.getEvent(category.id));\r\n        event = await api.publishEvent(event.id);\r\n\r\n        const participant = await api.addUser(rnd.getUser());\r\n        const request = await api.addParticipationRequest(participant.id, event.id);\r\n        if (request.status === 'PENDING') {\r\n            await api.confirmParticipationRequest(initiator.id, event.id, request.id);\r\n        }\r\n\r\n        for (let i = 0; i < 16; i++) {\r\n            await api.addComment(participant.id, event.id, rnd.getComment());\r\n        }\r\n\r\n        const response = await pm.sendRequest({\r\n            url: pm.collectionVariables.get(\"baseUrl\") + \"/users/\" + participant.id + \"/events/\" + event.id + \"/comments?from=0\",\r\n            method: \"GET\",\r\n            header: { \"Content-Type\": \"application/json\" }\r\n        });\r\n\r\n        pm.collectionVariables.set('userId', participant.id);\r\n        pm.collectionVariables.set('eventId', event.id);\r\n        pm.collectionVariables.set('source', response.json());\r\n    } catch (err) {\r\n        console.error(\"Ошибка при подготовке тестовых данных.\", err);\r\n    }\r\n};\r\n\r\nconst interval = setInterval(() => { }, 1000);\r\n\r\nsetTimeout(async () => {\r\n    try {\r\n        await main();\r\n    } catch (e) {\r\n        console.error(e);\r\n    } finally {\r\n        clearInterval(interval);\r\n    }\r\n},\r\n    100\r\n);"
+                      "const main = async () => {\r\n    const api = new API(pm);\r\n    const rnd = new RandomUtils();\r\n\r\n    try {\r\n        const initiator = await api.addUser(rnd.getUser());\r\n        const category = await api.addCategory(rnd.getCategory());\r\n        let event = await api.addEvent(initiator.id, rnd.getEvent(category.id));\r\n        event = await api.publishEvent(event.id);\r\n\r\n        const participant = await api.addUser(rnd.getUser());\r\n        const request = await api.addParticipationRequest(participant.id, event.id);\r\n        if (request.status === 'PENDING') {\r\n            await api.confirmParticipationRequest(initiator.id, event.id, request.id);\r\n        }\r\n\r\n        for (let i = 0; i < 16; i++) {\r\n            await api.addComment(participant.id, event.id, rnd.getComment());\r\n        }\r\n\r\n        const source = await new Promise((resolve, reject) => {\r\n            pm.sendRequest({\r\n                url: pm.collectionVariables.get(\"baseUrl\") + \"/users/\" + participant.id + \"/events/\" + event.id + \"/comments?from=0\",\r\n                method: \"GET\",\r\n                header: { \"Content-Type\": \"application/json\" }\r\n            }, (error, response) => {\r\n                if (error) reject(error);\r\n                else resolve(response.json());\r\n            });\r\n        });\r\n\r\n        pm.collectionVariables.set('userId', participant.id);\r\n        pm.collectionVariables.set('eventId', event.id);\r\n        pm.collectionVariables.set('source', source);\r\n    } catch (err) {\r\n        console.error(\"Ошибка при подготовке тестовых данных.\", err);\r\n    }\r\n};\r\n\r\nconst interval = setInterval(() => { }, 1000);\r\n\r\nsetTimeout(async () => {\r\n    try {\r\n        await main();\r\n    } catch (e) {\r\n        console.error(e);\r\n    } finally {\r\n        clearInterval(interval);\r\n    }\r\n},\r\n    100\r\n);"
                     ]
                   }
                 }
@@ -394,7 +394,7 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{baseUrl}}/users/:userId/events/:eventId/comments?from=0",
+                  "raw": "{{baseUrl}}/users/:userId/events/:eventId/comments?from=0&size=10",
                   "host": [
                     "{{baseUrl}}"
                   ],
@@ -414,8 +414,7 @@
                     {
                       "key": "size",
                       "value": "10",
-                      "description": "количество комментариев в наборе",
-                      "disabled": true
+                      "description": "количество комментариев в наборе"
                     }
                   ],
                   "variable": [
@@ -451,7 +450,7 @@
                   "script": {
                     "type": "text/javascript",
                     "exec": [
-                      "const main = async () => {\r\n    const api = new API(pm);\r\n    const rnd = new RandomUtils();\r\n\r\n    try {\r\n        const initiator = await api.addUser(rnd.getUser());\r\n        const category = await api.addCategory(rnd.getCategory());\r\n        let event = await api.addEvent(initiator.id, rnd.getEvent(category.id));\r\n        event = await api.publishEvent(event.id);\r\n\r\n        const participant = await api.addUser(rnd.getUser());\r\n        const request = await api.addParticipationRequest(participant.id, event.id);\r\n        if (request.status === 'PENDING') {\r\n            await api.confirmParticipationRequest(initiator.id, event.id, request.id);\r\n        }\r\n\r\n        for (let i = 0; i < 11; i++) {\r\n            await api.addComment(participant.id, event.id, rnd.getComment());\r\n        }\r\n\r\n        const response = await pm.sendRequest({\r\n            url: pm.collectionVariables.get(\"baseUrl\") + \"/users/\" + participant.id + \"/events/\" + event.id + \"/comments?size=11\",\r\n            method: \"GET\",\r\n            header: { \"Content-Type\": \"application/json\" }\r\n        });\r\n        pm.collectionVariables.set('userId', participant.id);\r\n        pm.collectionVariables.set('eventId', event.id);\r\n        pm.collectionVariables.set('source', response.json());\r\n    } catch (err) {\r\n        console.error(\"Ошибка при подготовке тестовых данных.\", err);\r\n    }\r\n};\r\n\r\nconst interval = setInterval(() => { }, 1000);\r\n\r\nsetTimeout(async () => {\r\n    try {\r\n        await main();\r\n    } catch (e) {\r\n        console.error(e);\r\n    } finally {\r\n        clearInterval(interval);\r\n    }\r\n},\r\n    100\r\n);"
+                      "const main = async () => {\r\n    const api = new API(pm);\r\n    const rnd = new RandomUtils();\r\n\r\n    try {\r\n        const initiator = await api.addUser(rnd.getUser());\r\n        const category = await api.addCategory(rnd.getCategory());\r\n        let event = await api.addEvent(initiator.id, rnd.getEvent(category.id));\r\n        event = await api.publishEvent(event.id);\r\n\r\n        const participant = await api.addUser(rnd.getUser());\r\n        const request = await api.addParticipationRequest(participant.id, event.id);\r\n        if (request.status === 'PENDING') {\r\n            await api.confirmParticipationRequest(initiator.id, event.id, request.id);\r\n        }\r\n\r\n        for (let i = 0; i < 11; i++) {\r\n            await api.addComment(participant.id, event.id, rnd.getComment());\r\n        }\r\n\r\n        const source = await new Promise((resolve, reject) => {\r\n            pm.sendRequest({\r\n                url: pm.collectionVariables.get(\"baseUrl\") + \"/users/\" + participant.id + \"/events/\" + event.id + \"/comments?size=11\",\r\n                method: \"GET\",\r\n                header: { \"Content-Type\": \"application/json\" }\r\n            }, (error, response) => {\r\n                if (error) reject(error);\r\n                else resolve(response.json());\r\n            });\r\n        });\r\n\r\n        pm.collectionVariables.set('userId', participant.id);\r\n        pm.collectionVariables.set('eventId', event.id);\r\n        pm.collectionVariables.set('source', source);\r\n    } catch (err) {\r\n        console.error(\"Ошибка при подготовке тестовых данных.\", err);\r\n    }\r\n};\r\n\r\nconst interval = setInterval(() => { }, 1000);\r\n\r\nsetTimeout(async () => {\r\n    try {\r\n        await main();\r\n    } catch (e) {\r\n        console.error(e);\r\n    } finally {\r\n        clearInterval(interval);\r\n    }\r\n},\r\n    100\r\n);"
                     ]
                   }
                 }
@@ -465,7 +464,7 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{baseUrl}}/users/:userId/events/:eventId/comments?size=11",
+                  "raw": "{{baseUrl}}/users/:userId/events/:eventId/comments?from=0&size=11",
                   "host": [
                     "{{baseUrl}}"
                   ],
@@ -480,8 +479,7 @@
                     {
                       "key": "from",
                       "value": "0",
-                      "description": "количество комментариев, которые нужно пропустить для формирования текущего набора",
-                      "disabled": true
+                      "description": "количество комментариев, которые нужно пропустить для формирования текущего набора"
                     },
                     {
                       "key": "size",
