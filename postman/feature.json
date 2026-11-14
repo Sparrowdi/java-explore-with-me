@@ -2183,7 +2183,7 @@
                   "script": {
                     "type": "text/javascript",
                     "exec": [
-                      "pm.test(\"Ответ должен содержать код статуса 204\", function () {\r\n    pm.response.to.have.status(204);\r\n});\r\n\r\nconst userId = pm.collectionVariables.get('userId');\r\nconst eventId = pm.collectionVariables.get('eventId');\r\nconst commentId = pm.collectionVariables.get('commentId');\r\n\r\npm.test(\"Комментарий должен быть найден до удаления\", function () {\r\n    const source = pm.collectionVariables.get('response');\r\n    pm.expect(source).to.not.be.null;\r\n    pm.expect(source.id).to.eql(commentId, 'Идентификтор комментария должен совпадать с удаляемым');\r\n});\r\n\r\npm.test(\"Комментарий должен быть удалён (отсутствует в списке)\", async function () {\r\n    const PAGE_SIZE = Number(pm.collectionVariables.get('pageSize'));\r\n    const response = await pm.sendRequest({\r\n        url: pm.collectionVariables.get(\"baseUrl\") + \"/admin/comments?userId=\" + userId + \"&eventId=\" + eventId + \"&from=0&size=\" + PAGE_SIZE,\r\n        method: \"GET\",\r\n        header: { \"Content-Type\": \"application/json\" }\r\n    });\r\n    pm.expect(response.code).to.eql(200);\r\n    const ids = response.json().map(c => c.id);\r\n    pm.expect(ids).to.not.include(commentId);\r\n});"
+                      "pm.test(\"Ответ должен содержать код статуса 204\", function () {\r\n    pm.response.to.have.status(204);\r\n});\r\n\r\nconst userId = pm.collectionVariables.get('userId');\r\nconst eventId = pm.collectionVariables.get('eventId');\r\nconst commentId = pm.collectionVariables.get('commentId');\r\n\r\npm.test(\"Комментарий должен быть найден до удаления\", function () {\r\n    const source = pm.collectionVariables.get('response');\r\n    pm.expect(source).to.not.be.null;\r\n    pm.expect(source.id).to.eql(commentId, 'Идентификтор комментария должен совпадать с удаляемым');\r\n});\r\n\r\npm.test(\"Комментарий должен быть удалён (отсутствует в списке)\", function (done) {\r\n    const PAGE_SIZE = Number(pm.collectionVariables.get('pageSize'));\r\n    pm.sendRequest({\r\n        url: pm.collectionVariables.get(\"baseUrl\") + \"/admin/comments?userId=\" + userId + \"&eventId=\" + eventId + \"&from=0&size=\" + PAGE_SIZE,\r\n        method: \"GET\",\r\n        header: { \"Content-Type\": \"application/json\" }\r\n    }, (error, response) => {\r\n        if (error) { done(error); return; }\r\n        try {\r\n            pm.expect(response.code).to.eql(200);\r\n            const ids = response.json().map(c => c.id);\r\n            pm.expect(ids).to.not.include(commentId);\r\n            done();\r\n        } catch (e) { done(e); }\r\n    });\r\n});"
                     ]
                   }
                 }
@@ -4833,11 +4833,11 @@
     },
     {
       "key": "userId",
-      "value": 750
+      "value": ""
     },
     {
       "key": "eventId",
-      "value": 430
+      "value": ""
     },
     {
       "key": "requestBody",
@@ -4845,628 +4845,39 @@
     },
     {
       "key": "commentId",
-      "value": -1
+      "value": ""
     },
     {
       "key": "oldText",
-      "value": "Facilis quia sit beatae delectus eius accusamus nihil qui."
+      "value": ""
     },
     {
       "key": "response",
-      "value": {
-        "id": 1841,
-        "text": "Et hic similique autem voluptates reiciendis consequatur.",
-        "author": {
-          "id": 760,
-          "email": "Zackary57@gmail.com",
-          "name": "Merle Kuvalis"
-        },
-        "event": {
-          "annotation": "Pariatur soluta omnis eveniet ut. Velit cupiditate iste id perspiciatis. Et rerum expedita exercitationem vero omnis sequi praesentium ea.",
-          "category": {
-            "id": 389,
-            "name": "Gorgeous1267"
-          },
-          "confirmedRequests": 1,
-          "eventDate": "2026-11-14 15:27:52",
-          "id": 414,
-          "initiator": {
-            "id": 759,
-            "name": "Alexander Blick"
-          },
-          "paid": false,
-          "title": "Officia recusandae odio cum.",
-          "views": 0
-        },
-        "createdOn": "2026-11-14 05:27:52",
-        "updatedOn": null
-      }
+      "value": ""
     },
     {
       "key": "source",
-      "value": [
-        {
-          "id": 1655,
-          "text": "Totam quidem autem quaerat incidunt eius assumenda vel ipsum nostrum.",
-          "author": {
-            "id": 670,
-            "email": "Dovie55@yahoo.com",
-            "name": "Mrs. Taylor Hansen"
-          },
-          "event": {
-            "annotation": "Rem voluptas error quae odit perspiciatis culpa perferendis necessitatibus natus. Qui nam quod voluptas numquam omnis quidem. Earum ipsum qui consequatur. Dolorum sint nemo aspernatur. Non unde similique.",
-            "category": {
-              "id": 345,
-              "name": "action-items1211"
-            },
-            "confirmedRequests": 1,
-            "eventDate": "2026-11-14 15:27:29",
-            "id": 365,
-            "initiator": {
-              "id": 669,
-              "name": "Mr. Jorge Cartwright"
-            },
-            "paid": false,
-            "title": "Ea tenetur quia beatae tenetur.",
-            "views": 0
-          },
-          "createdOn": "2026-11-14 05:27:30",
-          "updatedOn": null
-        },
-        {
-          "id": 1654,
-          "text": "Qui quia quasi ut rerum neque qui.",
-          "author": {
-            "id": 670,
-            "email": "Dovie55@yahoo.com",
-            "name": "Mrs. Taylor Hansen"
-          },
-          "event": {
-            "annotation": "Rem voluptas error quae odit perspiciatis culpa perferendis necessitatibus natus. Qui nam quod voluptas numquam omnis quidem. Earum ipsum qui consequatur. Dolorum sint nemo aspernatur. Non unde similique.",
-            "category": {
-              "id": 345,
-              "name": "action-items1211"
-            },
-            "confirmedRequests": 1,
-            "eventDate": "2026-11-14 15:27:29",
-            "id": 365,
-            "initiator": {
-              "id": 669,
-              "name": "Mr. Jorge Cartwright"
-            },
-            "paid": false,
-            "title": "Ea tenetur quia beatae tenetur.",
-            "views": 0
-          },
-          "createdOn": "2026-11-14 05:27:30",
-          "updatedOn": null
-        },
-        {
-          "id": 1653,
-          "text": "Ratione quae dolorem.",
-          "author": {
-            "id": 670,
-            "email": "Dovie55@yahoo.com",
-            "name": "Mrs. Taylor Hansen"
-          },
-          "event": {
-            "annotation": "Rem voluptas error quae odit perspiciatis culpa perferendis necessitatibus natus. Qui nam quod voluptas numquam omnis quidem. Earum ipsum qui consequatur. Dolorum sint nemo aspernatur. Non unde similique.",
-            "category": {
-              "id": 345,
-              "name": "action-items1211"
-            },
-            "confirmedRequests": 1,
-            "eventDate": "2026-11-14 15:27:29",
-            "id": 365,
-            "initiator": {
-              "id": 669,
-              "name": "Mr. Jorge Cartwright"
-            },
-            "paid": false,
-            "title": "Ea tenetur quia beatae tenetur.",
-            "views": 0
-          },
-          "createdOn": "2026-11-14 05:27:30",
-          "updatedOn": null
-        },
-        {
-          "id": 1652,
-          "text": "Ea nihil consequatur veniam itaque.",
-          "author": {
-            "id": 670,
-            "email": "Dovie55@yahoo.com",
-            "name": "Mrs. Taylor Hansen"
-          },
-          "event": {
-            "annotation": "Rem voluptas error quae odit perspiciatis culpa perferendis necessitatibus natus. Qui nam quod voluptas numquam omnis quidem. Earum ipsum qui consequatur. Dolorum sint nemo aspernatur. Non unde similique.",
-            "category": {
-              "id": 345,
-              "name": "action-items1211"
-            },
-            "confirmedRequests": 1,
-            "eventDate": "2026-11-14 15:27:29",
-            "id": 365,
-            "initiator": {
-              "id": 669,
-              "name": "Mr. Jorge Cartwright"
-            },
-            "paid": false,
-            "title": "Ea tenetur quia beatae tenetur.",
-            "views": 0
-          },
-          "createdOn": "2026-11-14 05:27:30",
-          "updatedOn": null
-        },
-        {
-          "id": 1651,
-          "text": "Qui rem eius.",
-          "author": {
-            "id": 670,
-            "email": "Dovie55@yahoo.com",
-            "name": "Mrs. Taylor Hansen"
-          },
-          "event": {
-            "annotation": "Rem voluptas error quae odit perspiciatis culpa perferendis necessitatibus natus. Qui nam quod voluptas numquam omnis quidem. Earum ipsum qui consequatur. Dolorum sint nemo aspernatur. Non unde similique.",
-            "category": {
-              "id": 345,
-              "name": "action-items1211"
-            },
-            "confirmedRequests": 1,
-            "eventDate": "2026-11-14 15:27:29",
-            "id": 365,
-            "initiator": {
-              "id": 669,
-              "name": "Mr. Jorge Cartwright"
-            },
-            "paid": false,
-            "title": "Ea tenetur quia beatae tenetur.",
-            "views": 0
-          },
-          "createdOn": "2026-11-14 05:27:30",
-          "updatedOn": null
-        }
-      ]
+      "value": ""
     },
     {
       "key": "full",
-      "value": [
-        {
-          "id": 1891,
-          "text": "Et eaque nemo voluptatem corrupti et in necessitatibus nesciunt.",
-          "author": {
-            "id": 776,
-            "email": "Dave62@yahoo.com",
-            "name": "Timothy Brown MD"
-          },
-          "event": {
-            "annotation": "Nulla et assumenda illum repellat itaque exercitationem aut. Possimus amet molestiae velit incidunt dolore nihil. Dolorem itaque et nisi numquam et sed voluptatem maiores. Praesentium molestias molestias fugiat nihil consequatur est vitae enim.",
-            "category": {
-              "id": 397,
-              "name": "sensor87"
-            },
-            "confirmedRequests": 1,
-            "eventDate": "2026-11-14 15:27:57",
-            "id": 423,
-            "initiator": {
-              "id": 775,
-              "name": "Ms. Margaret Wyman"
-            },
-            "paid": true,
-            "title": "Enim consectetur consequatur qui tenetur minus autem hic.",
-            "views": 0
-          },
-          "createdOn": "2026-11-14 05:27:57",
-          "updatedOn": null
-        },
-        {
-          "id": 1890,
-          "text": "Placeat sint neque qui et vitae facere et.",
-          "author": {
-            "id": 776,
-            "email": "Dave62@yahoo.com",
-            "name": "Timothy Brown MD"
-          },
-          "event": {
-            "annotation": "Nulla et assumenda illum repellat itaque exercitationem aut. Possimus amet molestiae velit incidunt dolore nihil. Dolorem itaque et nisi numquam et sed voluptatem maiores. Praesentium molestias molestias fugiat nihil consequatur est vitae enim.",
-            "category": {
-              "id": 397,
-              "name": "sensor87"
-            },
-            "confirmedRequests": 1,
-            "eventDate": "2026-11-14 15:27:57",
-            "id": 423,
-            "initiator": {
-              "id": 775,
-              "name": "Ms. Margaret Wyman"
-            },
-            "paid": true,
-            "title": "Enim consectetur consequatur qui tenetur minus autem hic.",
-            "views": 0
-          },
-          "createdOn": "2026-11-14 05:27:57",
-          "updatedOn": null
-        },
-        {
-          "id": 1889,
-          "text": "Vel quaerat temporibus quae voluptatem eos dolorem ut.",
-          "author": {
-            "id": 776,
-            "email": "Dave62@yahoo.com",
-            "name": "Timothy Brown MD"
-          },
-          "event": {
-            "annotation": "Nulla et assumenda illum repellat itaque exercitationem aut. Possimus amet molestiae velit incidunt dolore nihil. Dolorem itaque et nisi numquam et sed voluptatem maiores. Praesentium molestias molestias fugiat nihil consequatur est vitae enim.",
-            "category": {
-              "id": 397,
-              "name": "sensor87"
-            },
-            "confirmedRequests": 1,
-            "eventDate": "2026-11-14 15:27:57",
-            "id": 423,
-            "initiator": {
-              "id": 775,
-              "name": "Ms. Margaret Wyman"
-            },
-            "paid": true,
-            "title": "Enim consectetur consequatur qui tenetur minus autem hic.",
-            "views": 0
-          },
-          "createdOn": "2026-11-14 05:27:57",
-          "updatedOn": null
-        },
-        {
-          "id": 1888,
-          "text": "Tempora magni sed.",
-          "author": {
-            "id": 776,
-            "email": "Dave62@yahoo.com",
-            "name": "Timothy Brown MD"
-          },
-          "event": {
-            "annotation": "Nulla et assumenda illum repellat itaque exercitationem aut. Possimus amet molestiae velit incidunt dolore nihil. Dolorem itaque et nisi numquam et sed voluptatem maiores. Praesentium molestias molestias fugiat nihil consequatur est vitae enim.",
-            "category": {
-              "id": 397,
-              "name": "sensor87"
-            },
-            "confirmedRequests": 1,
-            "eventDate": "2026-11-14 15:27:57",
-            "id": 423,
-            "initiator": {
-              "id": 775,
-              "name": "Ms. Margaret Wyman"
-            },
-            "paid": true,
-            "title": "Enim consectetur consequatur qui tenetur minus autem hic.",
-            "views": 0
-          },
-          "createdOn": "2026-11-14 05:27:57",
-          "updatedOn": null
-        },
-        {
-          "id": 1887,
-          "text": "Cum quia molestias eius ut adipisci et sed dolorum.",
-          "author": {
-            "id": 776,
-            "email": "Dave62@yahoo.com",
-            "name": "Timothy Brown MD"
-          },
-          "event": {
-            "annotation": "Nulla et assumenda illum repellat itaque exercitationem aut. Possimus amet molestiae velit incidunt dolore nihil. Dolorem itaque et nisi numquam et sed voluptatem maiores. Praesentium molestias molestias fugiat nihil consequatur est vitae enim.",
-            "category": {
-              "id": 397,
-              "name": "sensor87"
-            },
-            "confirmedRequests": 1,
-            "eventDate": "2026-11-14 15:27:57",
-            "id": 423,
-            "initiator": {
-              "id": 775,
-              "name": "Ms. Margaret Wyman"
-            },
-            "paid": true,
-            "title": "Enim consectetur consequatur qui tenetur minus autem hic.",
-            "views": 0
-          },
-          "createdOn": "2026-11-14 05:27:57",
-          "updatedOn": null
-        },
-        {
-          "id": 1886,
-          "text": "Accusamus quia vel velit repellat aut.",
-          "author": {
-            "id": 776,
-            "email": "Dave62@yahoo.com",
-            "name": "Timothy Brown MD"
-          },
-          "event": {
-            "annotation": "Nulla et assumenda illum repellat itaque exercitationem aut. Possimus amet molestiae velit incidunt dolore nihil. Dolorem itaque et nisi numquam et sed voluptatem maiores. Praesentium molestias molestias fugiat nihil consequatur est vitae enim.",
-            "category": {
-              "id": 397,
-              "name": "sensor87"
-            },
-            "confirmedRequests": 1,
-            "eventDate": "2026-11-14 15:27:57",
-            "id": 423,
-            "initiator": {
-              "id": 775,
-              "name": "Ms. Margaret Wyman"
-            },
-            "paid": true,
-            "title": "Enim consectetur consequatur qui tenetur minus autem hic.",
-            "views": 0
-          },
-          "createdOn": "2026-11-14 05:27:57",
-          "updatedOn": null
-        },
-        {
-          "id": 1885,
-          "text": "Laboriosam aut quia nihil dolores reiciendis non.",
-          "author": {
-            "id": 776,
-            "email": "Dave62@yahoo.com",
-            "name": "Timothy Brown MD"
-          },
-          "event": {
-            "annotation": "Nulla et assumenda illum repellat itaque exercitationem aut. Possimus amet molestiae velit incidunt dolore nihil. Dolorem itaque et nisi numquam et sed voluptatem maiores. Praesentium molestias molestias fugiat nihil consequatur est vitae enim.",
-            "category": {
-              "id": 397,
-              "name": "sensor87"
-            },
-            "confirmedRequests": 1,
-            "eventDate": "2026-11-14 15:27:57",
-            "id": 423,
-            "initiator": {
-              "id": 775,
-              "name": "Ms. Margaret Wyman"
-            },
-            "paid": true,
-            "title": "Enim consectetur consequatur qui tenetur minus autem hic.",
-            "views": 0
-          },
-          "createdOn": "2026-11-14 05:27:57",
-          "updatedOn": null
-        },
-        {
-          "id": 1884,
-          "text": "Officia voluptatem quos et.",
-          "author": {
-            "id": 776,
-            "email": "Dave62@yahoo.com",
-            "name": "Timothy Brown MD"
-          },
-          "event": {
-            "annotation": "Nulla et assumenda illum repellat itaque exercitationem aut. Possimus amet molestiae velit incidunt dolore nihil. Dolorem itaque et nisi numquam et sed voluptatem maiores. Praesentium molestias molestias fugiat nihil consequatur est vitae enim.",
-            "category": {
-              "id": 397,
-              "name": "sensor87"
-            },
-            "confirmedRequests": 1,
-            "eventDate": "2026-11-14 15:27:57",
-            "id": 423,
-            "initiator": {
-              "id": 775,
-              "name": "Ms. Margaret Wyman"
-            },
-            "paid": true,
-            "title": "Enim consectetur consequatur qui tenetur minus autem hic.",
-            "views": 0
-          },
-          "createdOn": "2026-11-14 05:27:57",
-          "updatedOn": null
-        },
-        {
-          "id": 1883,
-          "text": "Dolorem tempora eos consequatur.",
-          "author": {
-            "id": 776,
-            "email": "Dave62@yahoo.com",
-            "name": "Timothy Brown MD"
-          },
-          "event": {
-            "annotation": "Nulla et assumenda illum repellat itaque exercitationem aut. Possimus amet molestiae velit incidunt dolore nihil. Dolorem itaque et nisi numquam et sed voluptatem maiores. Praesentium molestias molestias fugiat nihil consequatur est vitae enim.",
-            "category": {
-              "id": 397,
-              "name": "sensor87"
-            },
-            "confirmedRequests": 1,
-            "eventDate": "2026-11-14 15:27:57",
-            "id": 423,
-            "initiator": {
-              "id": 775,
-              "name": "Ms. Margaret Wyman"
-            },
-            "paid": true,
-            "title": "Enim consectetur consequatur qui tenetur minus autem hic.",
-            "views": 0
-          },
-          "createdOn": "2026-11-14 05:27:57",
-          "updatedOn": null
-        },
-        {
-          "id": 1882,
-          "text": "Doloremque delectus earum.",
-          "author": {
-            "id": 776,
-            "email": "Dave62@yahoo.com",
-            "name": "Timothy Brown MD"
-          },
-          "event": {
-            "annotation": "Nulla et assumenda illum repellat itaque exercitationem aut. Possimus amet molestiae velit incidunt dolore nihil. Dolorem itaque et nisi numquam et sed voluptatem maiores. Praesentium molestias molestias fugiat nihil consequatur est vitae enim.",
-            "category": {
-              "id": 397,
-              "name": "sensor87"
-            },
-            "confirmedRequests": 1,
-            "eventDate": "2026-11-14 15:27:57",
-            "id": 423,
-            "initiator": {
-              "id": 775,
-              "name": "Ms. Margaret Wyman"
-            },
-            "paid": true,
-            "title": "Enim consectetur consequatur qui tenetur minus autem hic.",
-            "views": 0
-          },
-          "createdOn": "2026-11-14 05:27:57",
-          "updatedOn": null
-        },
-        {
-          "id": 1881,
-          "text": "Exercitationem autem autem excepturi error fugiat beatae modi.",
-          "author": {
-            "id": 776,
-            "email": "Dave62@yahoo.com",
-            "name": "Timothy Brown MD"
-          },
-          "event": {
-            "annotation": "Nulla et assumenda illum repellat itaque exercitationem aut. Possimus amet molestiae velit incidunt dolore nihil. Dolorem itaque et nisi numquam et sed voluptatem maiores. Praesentium molestias molestias fugiat nihil consequatur est vitae enim.",
-            "category": {
-              "id": 397,
-              "name": "sensor87"
-            },
-            "confirmedRequests": 1,
-            "eventDate": "2026-11-14 15:27:57",
-            "id": 423,
-            "initiator": {
-              "id": 775,
-              "name": "Ms. Margaret Wyman"
-            },
-            "paid": true,
-            "title": "Enim consectetur consequatur qui tenetur minus autem hic.",
-            "views": 0
-          },
-          "createdOn": "2026-11-14 05:27:57",
-          "updatedOn": null
-        },
-        {
-          "id": 1880,
-          "text": "Consequatur saepe ducimus quibusdam voluptatem aut.",
-          "author": {
-            "id": 776,
-            "email": "Dave62@yahoo.com",
-            "name": "Timothy Brown MD"
-          },
-          "event": {
-            "annotation": "Nulla et assumenda illum repellat itaque exercitationem aut. Possimus amet molestiae velit incidunt dolore nihil. Dolorem itaque et nisi numquam et sed voluptatem maiores. Praesentium molestias molestias fugiat nihil consequatur est vitae enim.",
-            "category": {
-              "id": 397,
-              "name": "sensor87"
-            },
-            "confirmedRequests": 1,
-            "eventDate": "2026-11-14 15:27:57",
-            "id": 423,
-            "initiator": {
-              "id": 775,
-              "name": "Ms. Margaret Wyman"
-            },
-            "paid": true,
-            "title": "Enim consectetur consequatur qui tenetur minus autem hic.",
-            "views": 0
-          },
-          "createdOn": "2026-11-14 05:27:57",
-          "updatedOn": null
-        },
-        {
-          "id": 1879,
-          "text": "Iste et explicabo nobis velit quidem excepturi aperiam sunt.",
-          "author": {
-            "id": 776,
-            "email": "Dave62@yahoo.com",
-            "name": "Timothy Brown MD"
-          },
-          "event": {
-            "annotation": "Nulla et assumenda illum repellat itaque exercitationem aut. Possimus amet molestiae velit incidunt dolore nihil. Dolorem itaque et nisi numquam et sed voluptatem maiores. Praesentium molestias molestias fugiat nihil consequatur est vitae enim.",
-            "category": {
-              "id": 397,
-              "name": "sensor87"
-            },
-            "confirmedRequests": 1,
-            "eventDate": "2026-11-14 15:27:57",
-            "id": 423,
-            "initiator": {
-              "id": 775,
-              "name": "Ms. Margaret Wyman"
-            },
-            "paid": true,
-            "title": "Enim consectetur consequatur qui tenetur minus autem hic.",
-            "views": 0
-          },
-          "createdOn": "2026-11-14 05:27:57",
-          "updatedOn": null
-        },
-        {
-          "id": 1878,
-          "text": "Officiis ratione voluptas commodi quis inventore aspernatur.",
-          "author": {
-            "id": 776,
-            "email": "Dave62@yahoo.com",
-            "name": "Timothy Brown MD"
-          },
-          "event": {
-            "annotation": "Nulla et assumenda illum repellat itaque exercitationem aut. Possimus amet molestiae velit incidunt dolore nihil. Dolorem itaque et nisi numquam et sed voluptatem maiores. Praesentium molestias molestias fugiat nihil consequatur est vitae enim.",
-            "category": {
-              "id": 397,
-              "name": "sensor87"
-            },
-            "confirmedRequests": 1,
-            "eventDate": "2026-11-14 15:27:57",
-            "id": 423,
-            "initiator": {
-              "id": 775,
-              "name": "Ms. Margaret Wyman"
-            },
-            "paid": true,
-            "title": "Enim consectetur consequatur qui tenetur minus autem hic.",
-            "views": 0
-          },
-          "createdOn": "2026-11-14 05:27:57",
-          "updatedOn": null
-        },
-        {
-          "id": 1877,
-          "text": "Ut id quod fugiat corrupti recusandae sed earum.",
-          "author": {
-            "id": 776,
-            "email": "Dave62@yahoo.com",
-            "name": "Timothy Brown MD"
-          },
-          "event": {
-            "annotation": "Nulla et assumenda illum repellat itaque exercitationem aut. Possimus amet molestiae velit incidunt dolore nihil. Dolorem itaque et nisi numquam et sed voluptatem maiores. Praesentium molestias molestias fugiat nihil consequatur est vitae enim.",
-            "category": {
-              "id": 397,
-              "name": "sensor87"
-            },
-            "confirmedRequests": 1,
-            "eventDate": "2026-11-14 15:27:57",
-            "id": 423,
-            "initiator": {
-              "id": 775,
-              "name": "Ms. Margaret Wyman"
-            },
-            "paid": true,
-            "title": "Enim consectetur consequatur qui tenetur minus autem hic.",
-            "views": 0
-          },
-          "createdOn": "2026-11-14 05:27:57",
-          "updatedOn": null
-        }
-      ]
+      "value": ""
     },
     {
       "key": "pageSize",
-      "value": "100"
+      "value": ""
     },
     {
       "key": "totalComments",
-      "value": 15
+      "value": ""
     },
     {
       "key": "otherId",
-      "value": 730
+      "value": ""
     },
     {
       "key": "otherEventId",
-      "value": 404
+      "value": ""
     },
     {
       "key": "filterText",
@@ -5474,11 +4885,11 @@
     },
     {
       "key": "otherUserId",
-      "value": 740
+      "value": ""
     },
     {
       "key": "expectedCount",
-      "value": 3
+      "value": ""
     },
     {
       "key": "nonExistText",
@@ -5486,23 +4897,23 @@
     },
     {
       "key": "lastPageFrom",
-      "value": 10
+      "value": ""
     },
     {
       "key": "lastPageSize",
-      "value": 10
+      "value": ""
     },
     {
       "key": "expectedRemainder",
-      "value": 5
+      "value": ""
     },
     {
       "key": "outOfRangeFrom",
-      "value": 25
+      "value": ""
     },
     {
       "key": "bigSize",
-      "value": 25
+      "value": ""
     }
   ]
 }
