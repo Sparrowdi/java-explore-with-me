@@ -1,5 +1,7 @@
 package ru.practicum.main.comment.mapper;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import ru.practicum.main.comment.dto.CommentDto;
 import ru.practicum.main.comment.dto.NewCommentRequest;
 import ru.practicum.main.comment.dto.UpdateCommentRequest;
@@ -11,6 +13,7 @@ import ru.practicum.main.user.model.User;
 
 import java.time.LocalDateTime;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class CommentMapper {
     public static Comment mapToComment(NewCommentRequest newCommentRequest, User author, Event event) {
         Comment comment = new Comment();
