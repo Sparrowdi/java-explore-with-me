@@ -380,7 +380,7 @@
                   "script": {
                     "type": "text/javascript",
                     "exec": [
-                      "const main = async () => {\r\n    const api = new API(pm);\r\n    const rnd = new RandomUtils();\r\n\r\n    try {\r\n        const initiator = await api.addUser(rnd.getUser());\r\n        const category = await api.addCategory(rnd.getCategory());\r\n        let event = await api.addEvent(initiator.id, rnd.getEvent(category.id));\r\n        event = await api.publishEvent(event.id);\r\n\r\n        const participant = await api.addUser(rnd.getUser());\r\n        const request = await api.addParticipationRequest(participant.id, event.id);\r\n        if (request.status === 'PENDING') {\r\n            await api.confirmParticipationRequest(initiator.id, event.id, request.id);\r\n        }\r\n\r\n        for (let i = 0; i < 16; i++) {\r\n            await api.addComment(participant.id, event.id, rnd.getComment());\r\n        }\r\n\r\n        const response = await pm.sendRequest({\r\n            url: pm.collectionVariables.get(\"baseUrl\") + \"/users/\" + participant.id + \"/events/\" + event.id + \"/comments?from=1\",\r\n            method: \"GET\",\r\n            header: { \"Content-Type\": \"application/json\" }\r\n        });\r\n\r\n        pm.collectionVariables.set('userId', participant.id);\r\n        pm.collectionVariables.set('eventId', event.id);\r\n        pm.collectionVariables.set('source', response.json());\r\n    } catch (err) {\r\n        console.error(\"Ошибка при подготовке тестовых данных.\", err);\r\n    }\r\n};\r\n\r\nconst interval = setInterval(() => { }, 1000);\r\n\r\nsetTimeout(async () => {\r\n    try {\r\n        await main();\r\n    } catch (e) {\r\n        console.error(e);\r\n    } finally {\r\n        clearInterval(interval);\r\n    }\r\n},\r\n    100\r\n);"
+                      "const main = async () => {\r\n    const api = new API(pm);\r\n    const rnd = new RandomUtils();\r\n\r\n    try {\r\n        const initiator = await api.addUser(rnd.getUser());\r\n        const category = await api.addCategory(rnd.getCategory());\r\n        let event = await api.addEvent(initiator.id, rnd.getEvent(category.id));\r\n        event = await api.publishEvent(event.id);\r\n\r\n        const participant = await api.addUser(rnd.getUser());\r\n        const request = await api.addParticipationRequest(participant.id, event.id);\r\n        if (request.status === 'PENDING') {\r\n            await api.confirmParticipationRequest(initiator.id, event.id, request.id);\r\n        }\r\n\r\n        for (let i = 0; i < 16; i++) {\r\n            await api.addComment(participant.id, event.id, rnd.getComment());\r\n        }\r\n\r\n        const response = await pm.sendRequest({\r\n            url: pm.collectionVariables.get(\"baseUrl\") + \"/users/\" + participant.id + \"/events/\" + event.id + \"/comments?from=0\",\r\n            method: \"GET\",\r\n            header: { \"Content-Type\": \"application/json\" }\r\n        });\r\n\r\n        pm.collectionVariables.set('userId', participant.id);\r\n        pm.collectionVariables.set('eventId', event.id);\r\n        pm.collectionVariables.set('source', response.json());\r\n    } catch (err) {\r\n        console.error(\"Ошибка при подготовке тестовых данных.\", err);\r\n    }\r\n};\r\n\r\nconst interval = setInterval(() => { }, 1000);\r\n\r\nsetTimeout(async () => {\r\n    try {\r\n        await main();\r\n    } catch (e) {\r\n        console.error(e);\r\n    } finally {\r\n        clearInterval(interval);\r\n    }\r\n},\r\n    100\r\n);"
                     ]
                   }
                 }
@@ -442,7 +442,7 @@
                   "script": {
                     "type": "text/javascript",
                     "exec": [
-                      "pm.test(\"Ответ должен содержать код статуса 200 и данные в формате json-массив\", function () {\r\n    pm.response.to.be.ok;\r\n    pm.response.to.be.json;\r\n    const body = pm.response.json();\r\n    pm.expect(body).to.be.an('array');\r\n});\r\n\r\nconst target = pm.response.json();\r\nconst source = pm.collectionVariables.get('source');\r\n\r\npm.test(\"Значение from по-умолчанию должно быть равным 0\", function () {\r\n    pm.expect(target[0].id).to.be.equal(source[0].id, 'Запросы с from=0 и без него должны начинаться с одного и того же события');\r\n});\r\n"
+                      "pm.test(\"Ответ должен содержать код статуса 200 и данные в формате json-массив\", function () {\r\n    pm.response.to.be.ok;\r\n    pm.response.to.be.json;\r\n    const body = pm.response.json();\r\n    pm.expect(body).to.be.an('array');\r\n});\r\n\r\nconst target = pm.response.json();\r\nconst source = pm.collectionVariables.get('source');\r\n\r\npm.test(\"Значение from по умолчанию должно быть равным 0\", function () {\r\n    pm.expect(target[0].id).to.be.equal(source[0].id, 'Запросы с from=0 и без него должны начинаться с одного и того же события');\r\n});\r\n"
                     ]
                   }
                 },
@@ -486,76 +486,6 @@
                     {
                       "key": "size",
                       "value": "11",
-                      "description": "количество комментариев в наборе"
-                    }
-                  ],
-                  "variable": [
-                    {
-                      "key": "userId",
-                      "value": "{{userId}}",
-                      "description": "(Required) id текущего пользователя"
-                    },
-                    {
-                      "key": "eventId",
-                      "value": "{{eventId}}",
-                      "description": "(Required) id события"
-                    }
-                  ]
-                }
-              },
-              "response": []
-            },
-            {
-              "name": "Проверка значения size",
-              "event": [
-                {
-                  "listen": "test",
-                  "script": {
-                    "type": "text/javascript",
-                    "exec": [
-                      "pm.test(\"Ответ должен содержать код статуса 200 и данные в формате json-массив\", function () {\r\n    pm.response.to.be.ok;\r\n    pm.response.to.be.json;\r\n    const body = pm.response.json();\r\n    pm.expect(body).to.be.an('array');\r\n});\r\n\r\nconst target = pm.response.json();\r\nconst source = pm.collectionVariables.get('source');\r\nconst full = pm.collectionVariables.get('full');\r\n\r\npm.test(\"size=5 возвращает 5 элементов\", function () {\r\n    pm.expect(target.length).to.be.equal(5);\r\n});\r\n\r\npm.test(\"from=2 начинает с третьего элемента полного списка\", function () {\r\n    pm.expect(target[0].id).to.be.equal(full[2].id);\r\n});\r\n\r\npm.test(\"Элементы from=2&size=5 совпадают с full[2..6]\", function () {\r\n    pm.expect(target.map(c => c.id)).to.be.eql(full.slice(2, 7).map(c => c.id));\r\n});\r\n\r\npm.test(\"Ответ из main и текущий запрос согласованы\", function () {\r\n    pm.expect(source.map(c => c.id)).to.be.eql(target.map(c => c.id));\r\n});"
-                    ]
-                  }
-                },
-                {
-                  "listen": "prerequest",
-                  "script": {
-                    "type": "text/javascript",
-                    "exec": [
-                      "const main = async () => {\r\n    const api = new API(pm);\r\n    const rnd = new RandomUtils();\r\n\r\n    try {\r\n        const initiator = await api.addUser(rnd.getUser());\r\n        const category = await api.addCategory(rnd.getCategory());\r\n        let event = await api.addEvent(initiator.id, rnd.getEvent(category.id));\r\n        event = await api.publishEvent(event.id);\r\n\r\n        const participant = await api.addUser(rnd.getUser());\r\n        const request = await api.addParticipationRequest(participant.id, event.id);\r\n        if (request.status === 'PENDING') {\r\n            await api.confirmParticipationRequest(initiator.id, event.id, request.id);\r\n        }\r\n\r\n        for (let i = 0; i < 16; i++) {\r\n            await api.addComment(participant.id, event.id, rnd.getComment());\r\n        }\r\n\r\n        const full = await pm.sendRequest({\r\n            url: pm.collectionVariables.get(\"baseUrl\") + \"/users/\" + participant.id + \"/events/\" + event.id + \"/comments?from=0&size=16\",\r\n            method: \"GET\",\r\n            header: { \"Content-Type\": \"application/json\" }\r\n        });\r\n\r\n        const slice = await pm.sendRequest({\r\n            url: pm.collectionVariables.get(\"baseUrl\") + \"/users/\" + participant.id + \"/events/\" + event.id + \"/comments?from=2&size=5\",\r\n            method: \"GET\",\r\n            header: { \"Content-Type\": \"application/json\" }\r\n        });\r\n\r\n        pm.collectionVariables.set('userId', participant.id);\r\n        pm.collectionVariables.set('eventId', event.id);\r\n        pm.collectionVariables.set('full', full.json());\r\n        pm.collectionVariables.set('source', slice.json());\r\n    } catch (err) {\r\n        console.error(\"Ошибка при подготовке тестовых данных.\", err);\r\n    }\r\n};\r\n\r\nconst interval = setInterval(() => { }, 1000);\r\n\r\nsetTimeout(async () => {\r\n    try {\r\n        await main();\r\n    } catch (e) {\r\n        console.error(e);\r\n    } finally {\r\n        clearInterval(interval);\r\n    }\r\n},\r\n    100\r\n);"
-                    ]
-                  }
-                }
-              ],
-              "request": {
-                "method": "GET",
-                "header": [
-                  {
-                    "key": "Accept",
-                    "value": "application/json"
-                  }
-                ],
-                "url": {
-                  "raw": "{{baseUrl}}/users/:userId/events/:eventId/comments?from=2&size=5",
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "path": [
-                    "users",
-                    ":userId",
-                    "events",
-                    ":eventId",
-                    "comments"
-                  ],
-                  "query": [
-                    {
-                      "key": "from",
-                      "value": "2",
-                      "description": "количество комментариев, которые нужно пропустить для формирования текущего набора"
-                    },
-                    {
-                      "key": "size",
-                      "value": "5",
                       "description": "количество комментариев в наборе"
                     }
                   ],
