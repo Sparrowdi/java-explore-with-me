@@ -4829,7 +4829,7 @@
   "variable": [
     {
       "key": "baseUrl",
-      "value": ""
+      "value": "http://localhost:8080"
     },
     {
       "key": "userId",
@@ -4881,7 +4881,7 @@
     },
     {
       "key": "filterText",
-      "value": ""
+      "value": "фильтрпоиска"
     },
     {
       "key": "otherUserId",
@@ -4893,7 +4893,7 @@
     },
     {
       "key": "nonExistText",
-      "value": ""
+      "value": "несуществующийтекст"
     },
     {
       "key": "lastPageFrom",
