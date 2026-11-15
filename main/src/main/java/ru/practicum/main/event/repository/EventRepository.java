@@ -124,4 +124,6 @@ public interface EventRepository extends JpaRepository<Event, Long> {
             @Param("state") EventState state,
             @Param("status") RequestStatus status,
             Pageable pageable);
+
+    Optional<Event> findByIdAndState(long eventId, EventState state);
 }
